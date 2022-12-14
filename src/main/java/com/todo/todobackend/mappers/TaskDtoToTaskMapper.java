@@ -17,7 +17,7 @@ public class TaskDtoToTaskMapper implements Mapper <TaskDto, Task>{
         task.setEta(in.getEta());
         task.setCreatedDate(LocalDateTime.now());
         task.setFinished(false);
-        task.setTaskStatus(TaskStatus.ON_TIME);
+        task.setStatus(TaskStatus.ON_TIME);
         return task;
     }
 }

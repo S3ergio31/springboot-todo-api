@@ -1,12 +1,17 @@
 package com.todo.todobackend.services;
 
+import com.todo.todobackend.exceptions.ToDoException;
 import com.todo.todobackend.mappers.TaskDtoToTaskMapper;
 import com.todo.todobackend.persistence.entities.Task;
+import com.todo.todobackend.persistence.entities.TaskStatus;
 import com.todo.todobackend.persistence.repositories.TaskRepository;
 import com.todo.todobackend.services.dtos.TaskDto;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService {
@@ -24,5 +29,20 @@ public class TaskService {
 
     public List<Task> findAll(){
         return this.taskRepository.findAll();
+    }
+
+    public List<Task> findAllByStatus(TaskStatus status) {
+        return this.taskRepository.findAllByStatus(status);
+    }
+
+    @Transactional
+    public void markAsFinished(Long id) {
+        Optional<Task> optionalTask = this.taskRepository.findById(id);
+
+        if(optionalTask.isEmpty()) {
+            throw new ToDoException("Task not found", HttpStatus.NOT_FOUND);
+        }
+
+        this.taskRepository.markAsFinished(id);
     }
 }
