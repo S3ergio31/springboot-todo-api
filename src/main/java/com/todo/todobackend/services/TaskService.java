@@ -37,12 +37,20 @@ public class TaskService {
 
     @Transactional
     public void markAsFinished(Long id) {
+        this.failIfTaskNotExist(id);
+        this.taskRepository.markAsFinished(id);
+    }
+
+    public void deleteById(Long id) {
+        this.failIfTaskNotExist(id);
+        this.taskRepository.deleteById(id);
+    }
+
+    private void failIfTaskNotExist(Long id) {
         Optional<Task> optionalTask = this.taskRepository.findById(id);
 
         if(optionalTask.isEmpty()) {
             throw new ToDoException("Task not found", HttpStatus.NOT_FOUND);
         }
-
-        this.taskRepository.markAsFinished(id);
     }
 }
